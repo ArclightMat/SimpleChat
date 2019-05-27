@@ -5,6 +5,7 @@ import java.awt.event.KeyListener;
 import java.io.*;
 import java.net.Socket;
 import javax.swing.*;
+import javax.swing.text.DefaultCaret;
 
 public class Client extends JFrame implements ActionListener, KeyListener{
     private JTextArea textChat;
@@ -33,6 +34,8 @@ public class Client extends JFrame implements ActionListener, KeyListener{
         pnlContent = new JPanel();
         textChat = new JTextArea(10, 40);
         textChat.setEditable(false);
+        DefaultCaret caret = (DefaultCaret)textChat.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         txtMsg = new JTextField(20);
         lblMsg = new JLabel(txtNick.getText() + ":");
         btnSend = new JButton("Enviar");
@@ -65,7 +68,7 @@ public class Client extends JFrame implements ActionListener, KeyListener{
             output.write(txtNick.getText() + "\n");
             output.flush();
             String msg = "";
-            while (!"/q".equalsIgnoreCase(msg)) {
+            while (true) {
                 if(input.ready()) {
                 msg = input.readLine();
                 textChat.append(msg + "\n");
