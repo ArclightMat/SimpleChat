@@ -28,11 +28,15 @@ public class Server extends Thread {
             output = new PrintWriter(new BufferedWriter(new OutputStreamWriter(this.con.getOutputStream())));
             clientList.add(output);
             name = msg = input.readLine();
-            while(!"/q".equalsIgnoreCase(msg) && msg != null)
+            System.out.println("Cliente conectado: "+ name);
+            if (output != null) output.println();
+            while(msg != null)
             {
                 msg = input.readLine();
-                sendToAll(output, msg);
-                System.out.println(msg);
+                if (msg != null) {
+                    sendToAll(output, msg);
+                    System.out.println(msg);
+                }
             }
         }
         catch (Exception e) {
@@ -45,7 +49,7 @@ public class Server extends Thread {
         for(PrintWriter pw : clientList) {
             pwO = pw;
             if (!(pwOutput == pwO)) {
-                pw.write(name + ":" + msg + "\n");
+                pw.write(msg + "\n");
                 pw.flush();
             }
         }

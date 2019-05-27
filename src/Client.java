@@ -77,20 +77,19 @@ public class Client extends JFrame implements ActionListener, KeyListener{
         }
 
     }
-    private void sendMsg (String msg) throws IOException{
-        if(msg.equals("/q")) {
-            stop();
-        } else if (!msg.equals("")){
+    private void sendMsg (String msg) {
+        if (!msg.equals("")){
             output.write(msg + "\n");
-            textChat.append(txtNick.getText() + ":" + txtMsg.getText()+"\n");
+            textChat.append(txtNick.getText() + ": " + txtMsg.getText()+"\n");
         }
         output.flush();
         txtMsg.setText("");
     }
-    private void stop() throws IOException{
-        output.write("desconectou\n");
+    private void stop() throws IOException {
+        output.write(txtNick.getText() + " desconectou\n");
         output.flush();
         output.close();
+        input.close();
         socket.close();
         System.exit(0);
     }
@@ -102,22 +101,17 @@ public class Client extends JFrame implements ActionListener, KeyListener{
                 sendMsg(txtMsg.getText());
             else
             if(e.getActionCommand().equals(btnExit.getActionCommand()))
-                sendMsg("/q");
+                stop();
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null,"Você não deveria ver isso.\n\nException: " + ex);
         }
     }
     @Override
     public void keyPressed(KeyEvent e) {
-
-        if(e.getKeyCode() == KeyEvent.VK_ENTER){
-            try {
-                sendMsg(txtMsg.getText());
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(null,"Você não deveria ver isso.\n\nException: " + ex);
+        if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+                sendMsg(txtNick.getText() + ": "+ txtMsg.getText());
             }
         }
-    }
 
     @Override
     public void keyReleased(KeyEvent arg0) {
@@ -156,7 +150,6 @@ public class Client extends JFrame implements ActionListener, KeyListener{
             fallbackCross(); // Mac deve usar aparência nativa automaticamente, usercases como BSD/Unix estão além do escopo.
         }
     }
-
 
     public static void main(String []args) {
         nativeLookAndFeel();
